@@ -33,10 +33,14 @@ class CRM_Conjunction_Form_Search_SearchByTag extends CRM_Contact_Form_Search_Cu
   }
 
   function &columns() {
-    $columns = array(
+    $columns = [
       /*E::ts('Contact Id') => 'contact_id',*/
       E::ts('Name') => 'sort_name',
-    );
+      E::ts('Job Title') => 'job_title',
+      E::ts('Organization') => 'organization_name',
+      E::ts('Email') => 'email',
+      E::ts('Tags') => 'tags',
+    ];
     return $columns;
   }
 
@@ -49,7 +53,21 @@ class CRM_Conjunction_Form_Search_SearchByTag extends CRM_Contact_Form_Search_Cu
     $select = "
       contact_a.id as contact_id,
       contact_a.id,
-      contact_a.sort_name
+      contact_a.sort_name,
+      contact_a.job_title,
+      contact_a.organization_name,
+      e.email,
+      (
+        SELECT
+          group_concat(t.name)
+        FROM
+          civicrm_entity_tag ett
+        INNER JOIN
+            civicrm_tag t on t.id = ett.tag_id
+        WHERE
+          ett.entity_table = 'civicrm_contact'
+          and ett.entity_id = contact_a.id
+    	) tags	
     ";
 
     return $select;
@@ -59,6 +77,8 @@ class CRM_Conjunction_Form_Search_SearchByTag extends CRM_Contact_Form_Search_Cu
     $from = "
       FROM
         civicrm_contact contact_a
+      LEFT OUTER JOIN
+        civicrm_email e ON e.contact_id = contact_a.id AND e.is_primary = 1
     ";
 
     return $from;

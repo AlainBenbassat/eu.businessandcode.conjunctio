@@ -11,8 +11,8 @@ return array (
     'params' => 
     array (
       'version' => 3,
-      'label' => 'SearchByTag',
-      'description' => 'SearchByTag (eu.businessandcode.conjunction)',
+      'label' => 'Search By Tag',
+      'description' => 'Search contacts by tag using AND operator (not OR)',
       'class_name' => 'CRM_Conjunction_Form_Search_SearchByTag',
     ),
   ),
